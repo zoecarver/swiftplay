@@ -8,6 +8,4 @@
 
 import Foundation
 
-class Controller {
-    
-}
+class Controller { }

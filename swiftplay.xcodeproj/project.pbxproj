@@ -38,6 +38,16 @@
 		C887565F211E5417009F5530 /* swiftplay.h in Headers */ = {isa = PBXBuildFile; fileRef = C887565D211E5417009F5530 /* swiftplay.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C8875696211E5576009F5530 /* Track.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8875695211E5576009F5530 /* Track.swift */; };
 		C887569B211E5821009F5530 /* Controller.swift in Sources */ = {isa = PBXBuildFile; fileRef = C887569A211E5821009F5530 /* Controller.swift */; };
+		C8EF28882123999F00CCEF4C /* PlayerState.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8EF28872123999F00CCEF4C /* PlayerState.swift */; };
+		C8EF288A212399B800CCEF4C /* Packet.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8EF2889212399B800CCEF4C /* Packet.swift */; };
+		C8EF288C212399C600CCEF4C /* Server.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8EF288B212399C600CCEF4C /* Server.swift */; };
+		C8EF288E212399F900CCEF4C /* SocketHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8EF288D212399F900CCEF4C /* SocketHandler.swift */; };
+		C8EF289021239A0A00CCEF4C /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8EF288F21239A0A00CCEF4C /* Utils.swift */; };
+		C8EF289121239AF300CCEF4C /* PlayerState.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8EF28872123999F00CCEF4C /* PlayerState.swift */; };
+		C8EF289221239AF300CCEF4C /* Packet.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8EF2889212399B800CCEF4C /* Packet.swift */; };
+		C8EF289321239AF300CCEF4C /* Server.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8EF288B212399C600CCEF4C /* Server.swift */; };
+		C8EF289421239AF300CCEF4C /* SocketHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8EF288D212399F900CCEF4C /* SocketHandler.swift */; };
+		C8EF289521239AF300CCEF4C /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8EF288F21239A0A00CCEF4C /* Utils.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -97,6 +107,11 @@
 		C8875665211E5428009F5530 /* Airplay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Airplay.swift; sourceTree = "<group>"; };
 		C8875695211E5576009F5530 /* Track.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Track.swift; sourceTree = "<group>"; };
 		C887569A211E5821009F5530 /* Controller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Controller.swift; sourceTree = "<group>"; };
+		C8EF28872123999F00CCEF4C /* PlayerState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerState.swift; sourceTree = "<group>"; };
+		C8EF2889212399B800CCEF4C /* Packet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Packet.swift; sourceTree = "<group>"; };
+		C8EF288B212399C600CCEF4C /* Server.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Server.swift; sourceTree = "<group>"; };
+		C8EF288D212399F900CCEF4C /* SocketHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketHandler.swift; sourceTree = "<group>"; };
+		C8EF288F21239A0A00CCEF4C /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -190,9 +205,14 @@
 				C887565D211E5417009F5530 /* swiftplay.h */,
 				C887565E211E5417009F5530 /* Info.plist */,
 				C8875665211E5428009F5530 /* Airplay.swift */,
+				C8EF288D212399F900CCEF4C /* SocketHandler.swift */,
 				C8875695211E5576009F5530 /* Track.swift */,
 				C887569A211E5821009F5530 /* Controller.swift */,
 				C81F11E2211F3CF000B6DF07 /* RSAHelper.swift */,
+				C8EF28872123999F00CCEF4C /* PlayerState.swift */,
+				C8EF2889212399B800CCEF4C /* Packet.swift */,
+				C8EF288B212399C600CCEF4C /* Server.swift */,
+				C8EF288F21239A0A00CCEF4C /* Utils.swift */,
 			);
 			path = swiftplay;
 			sourceTree = "<group>";
@@ -395,6 +415,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C8EF289121239AF300CCEF4C /* PlayerState.swift in Sources */,
+				C8EF289221239AF300CCEF4C /* Packet.swift in Sources */,
+				C8EF289321239AF300CCEF4C /* Server.swift in Sources */,
+				C8EF289421239AF300CCEF4C /* SocketHandler.swift in Sources */,
+				C8EF289521239AF300CCEF4C /* Utils.swift in Sources */,
 				C81F11E4211F3E3200B6DF07 /* RSAHelper.swift in Sources */,
 				C820A99A211E96DD0060819F /* Controller.swift in Sources */,
 				C820A999211E96DD0060819F /* Track.swift in Sources */,
@@ -422,8 +447,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C8EF288C212399C600CCEF4C /* Server.swift in Sources */,
+				C8EF28882123999F00CCEF4C /* PlayerState.swift in Sources */,
+				C8EF289021239A0A00CCEF4C /* Utils.swift in Sources */,
 				C81F11E3211F3CF000B6DF07 /* RSAHelper.swift in Sources */,
 				C8875696211E5576009F5530 /* Track.swift in Sources */,
+				C8EF288A212399B800CCEF4C /* Packet.swift in Sources */,
+				C8EF288E212399F900CCEF4C /* SocketHandler.swift in Sources */,
 				C887569B211E5821009F5530 /* Controller.swift in Sources */,
 				C80DD77F211E8B2100F85D10 /* Airplay.swift in Sources */,
 			);
