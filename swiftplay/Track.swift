@@ -7,3 +7,13 @@
 //
 
 import Foundation
+
+public struct Track {
+    public var name: String?
+    public var album: String?
+    public var artist: String?
+    public var position: Double?
+    public var duration: Double?
+    public var artwrok: Data?
+    public var playing: Bool! = false
+}

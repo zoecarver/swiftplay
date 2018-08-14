@@ -7,6 +7,10 @@
 //
 
 import Foundation
+import swiftplay_mac
 
-print("Hello, World!")
+print("Initializing server...")
+let server = AirplayServer()
+server.listen()
 
+while true { /* BLOCK */ }

@@ -6,32 +6,170 @@
 	objectVersion = 50;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		C8FC254B211F954100373805 /* CommonCryptoModuleMap */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = C8FC254E211F954100373805 /* Build configuration list for PBXAggregateTarget "CommonCryptoModuleMap" */;
+			buildPhases = (
+				C8AE915C211F955A003B128F /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = CommonCryptoModuleMap;
+			productName = CommonCryptoModuleMap;
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
+		C80DD77F211E8B2100F85D10 /* Airplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8875665211E5428009F5530 /* Airplay.swift */; };
+		C81F11E3211F3CF000B6DF07 /* RSAHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C81F11E2211F3CF000B6DF07 /* RSAHelper.swift */; };
+		C81F11E4211F3E3200B6DF07 /* RSAHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C81F11E2211F3CF000B6DF07 /* RSAHelper.swift */; };
+		C820A97D211E95490060819F /* swiftplay_mac.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C820A974211E95490060819F /* swiftplay_mac.framework */; };
+		C820A982211E95490060819F /* swiftplay_macTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C820A981211E95490060819F /* swiftplay_macTests.swift */; };
+		C820A984211E95490060819F /* swiftplay_mac.h in Headers */ = {isa = PBXBuildFile; fileRef = C820A976211E95490060819F /* swiftplay_mac.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C820A994211E96A80060819F /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = C820A993211E96A80060819F /* main.swift */; };
+		C820A999211E96DD0060819F /* Track.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8875695211E5576009F5530 /* Track.swift */; };
+		C820A99A211E96DD0060819F /* Controller.swift in Sources */ = {isa = PBXBuildFile; fileRef = C887569A211E5821009F5530 /* Controller.swift */; };
+		C820A99B211E96EB0060819F /* Airplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8875665211E5428009F5530 /* Airplay.swift */; };
+		C820A9A2211E98C00060819F /* CocoaAsyncSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C820A9A1211E98C00060819F /* CocoaAsyncSocket.framework */; };
+		C820A9A4211E98CD0060819F /* CocoaAsyncSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C820A9A3211E98CD0060819F /* CocoaAsyncSocket.framework */; };
+		C820A9A5211F2C1E0060819F /* swiftplay_mac.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C820A974211E95490060819F /* swiftplay_mac.framework */; };
+		C820A9A9211F2D840060819F /* CocoaAsyncSocket.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C820A9A3211E98CD0060819F /* CocoaAsyncSocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C887565F211E5417009F5530 /* swiftplay.h in Headers */ = {isa = PBXBuildFile; fileRef = C887565D211E5417009F5530 /* swiftplay.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C8875696211E5576009F5530 /* Track.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8875695211E5576009F5530 /* Track.swift */; };
+		C887569B211E5821009F5530 /* Controller.swift in Sources */ = {isa = PBXBuildFile; fileRef = C887569A211E5821009F5530 /* Controller.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		C820A97E211E95490060819F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C8875651211E5417009F5530 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C820A973211E95490060819F;
+			remoteInfo = "swiftplay-mac";
+		};
+		C8AE915D211F9630003B128F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C8875651211E5417009F5530 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C8FC254B211F954100373805;
+			remoteInfo = CommonCryptoModuleMap;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		C820A98F211E96A80060819F /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+		C820A9A8211F2D760060819F /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				C820A9A9211F2D840060819F /* CocoaAsyncSocket.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		C81F11E2211F3CF000B6DF07 /* RSAHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSAHelper.swift; sourceTree = "<group>"; };
+		C820A974211E95490060819F /* swiftplay_mac.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = swiftplay_mac.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C820A976211E95490060819F /* swiftplay_mac.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = swiftplay_mac.h; sourceTree = "<group>"; };
+		C820A977211E95490060819F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C820A97C211E95490060819F /* swiftplay-macTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "swiftplay-macTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C820A981211E95490060819F /* swiftplay_macTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = swiftplay_macTests.swift; sourceTree = "<group>"; };
+		C820A983211E95490060819F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C820A991211E96A80060819F /* swiftplay-test */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "swiftplay-test"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C820A993211E96A80060819F /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		C820A9A1211E98C00060819F /* CocoaAsyncSocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaAsyncSocket.framework; path = Carthage/Build/iOS/CocoaAsyncSocket.framework; sourceTree = "<group>"; };
+		C820A9A3211E98CD0060819F /* CocoaAsyncSocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaAsyncSocket.framework; path = Carthage/Build/Mac/CocoaAsyncSocket.framework; sourceTree = "<group>"; };
 		C887565A211E5417009F5530 /* swiftplay.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = swiftplay.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C887565D211E5417009F5530 /* swiftplay.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = swiftplay.h; sourceTree = "<group>"; };
 		C887565E211E5417009F5530 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C8875665211E5428009F5530 /* Airplay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Airplay.swift; sourceTree = "<group>"; };
+		C8875695211E5576009F5530 /* Track.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Track.swift; sourceTree = "<group>"; };
+		C887569A211E5821009F5530 /* Controller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Controller.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		C820A970211E95490060819F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C820A9A4211E98CD0060819F /* CocoaAsyncSocket.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C820A979211E95490060819F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C820A97D211E95490060819F /* swiftplay_mac.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C820A98E211E96A80060819F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C820A9A5211F2C1E0060819F /* swiftplay_mac.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C8875656211E5417009F5530 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C820A9A2211E98C00060819F /* CocoaAsyncSocket.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		C820A975211E95490060819F /* swiftplay-mac */ = {
+			isa = PBXGroup;
+			children = (
+				C820A976211E95490060819F /* swiftplay_mac.h */,
+				C820A977211E95490060819F /* Info.plist */,
+			);
+			path = "swiftplay-mac";
+			sourceTree = "<group>";
+		};
+		C820A980211E95490060819F /* swiftplay-macTests */ = {
+			isa = PBXGroup;
+			children = (
+				C820A981211E95490060819F /* swiftplay_macTests.swift */,
+				C820A983211E95490060819F /* Info.plist */,
+			);
+			path = "swiftplay-macTests";
+			sourceTree = "<group>";
+		};
+		C820A992211E96A80060819F /* swiftplay-test */ = {
+			isa = PBXGroup;
+			children = (
+				C820A993211E96A80060819F /* main.swift */,
+			);
+			path = "swiftplay-test";
+			sourceTree = "<group>";
+		};
 		C8875650211E5417009F5530 = {
 			isa = PBXGroup;
 			children = (
 				C887565C211E5417009F5530 /* swiftplay */,
+				C820A975211E95490060819F /* swiftplay-mac */,
+				C820A980211E95490060819F /* swiftplay-macTests */,
+				C820A992211E96A80060819F /* swiftplay-test */,
 				C887565B211E5417009F5530 /* Products */,
+				C8875697211E5713009F5530 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -39,6 +177,9 @@
 			isa = PBXGroup;
 			children = (
 				C887565A211E5417009F5530 /* swiftplay.framework */,
+				C820A974211E95490060819F /* swiftplay_mac.framework */,
+				C820A97C211E95490060819F /* swiftplay-macTests.xctest */,
+				C820A991211E96A80060819F /* swiftplay-test */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -48,13 +189,34 @@
 			children = (
 				C887565D211E5417009F5530 /* swiftplay.h */,
 				C887565E211E5417009F5530 /* Info.plist */,
+				C8875665211E5428009F5530 /* Airplay.swift */,
+				C8875695211E5576009F5530 /* Track.swift */,
+				C887569A211E5821009F5530 /* Controller.swift */,
+				C81F11E2211F3CF000B6DF07 /* RSAHelper.swift */,
 			);
 			path = swiftplay;
+			sourceTree = "<group>";
+		};
+		C8875697211E5713009F5530 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C820A9A3211E98CD0060819F /* CocoaAsyncSocket.framework */,
+				C820A9A1211E98C00060819F /* CocoaAsyncSocket.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
+		C820A971211E95490060819F /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C820A984211E95490060819F /* swiftplay_mac.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C8875657211E5417009F5530 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -66,6 +228,61 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		C820A973211E95490060819F /* swiftplay-mac */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C820A985211E95490060819F /* Build configuration list for PBXNativeTarget "swiftplay-mac" */;
+			buildPhases = (
+				C820A96F211E95490060819F /* Sources */,
+				C820A970211E95490060819F /* Frameworks */,
+				C820A971211E95490060819F /* Headers */,
+				C820A972211E95490060819F /* Resources */,
+				C820A9A8211F2D760060819F /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C8AE915E211F9630003B128F /* PBXTargetDependency */,
+			);
+			name = "swiftplay-mac";
+			productName = "swiftplay-mac";
+			productReference = C820A974211E95490060819F /* swiftplay_mac.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		C820A97B211E95490060819F /* swiftplay-macTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C820A988211E95490060819F /* Build configuration list for PBXNativeTarget "swiftplay-macTests" */;
+			buildPhases = (
+				C820A978211E95490060819F /* Sources */,
+				C820A979211E95490060819F /* Frameworks */,
+				C820A97A211E95490060819F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C820A97F211E95490060819F /* PBXTargetDependency */,
+			);
+			name = "swiftplay-macTests";
+			productName = "swiftplay-macTests";
+			productReference = C820A97C211E95490060819F /* swiftplay-macTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		C820A990211E96A80060819F /* swiftplay-test */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C820A995211E96A80060819F /* Build configuration list for PBXNativeTarget "swiftplay-test" */;
+			buildPhases = (
+				C820A98D211E96A80060819F /* Sources */,
+				C820A98E211E96A80060819F /* Frameworks */,
+				C820A98F211E96A80060819F /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "swiftplay-test";
+			productName = "swiftplay-test";
+			productReference = C820A991211E96A80060819F /* swiftplay-test */;
+			productType = "com.apple.product-type.tool";
+		};
 		C8875659211E5417009F5530 /* swiftplay */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = C8875662211E5417009F5530 /* Build configuration list for PBXNativeTarget "swiftplay" */;
@@ -90,10 +307,24 @@
 		C8875651211E5417009F5530 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 0940;
 				LastUpgradeCheck = 0940;
 				ORGANIZATIONNAME = "Zoe IAMZOE.io";
 				TargetAttributes = {
+					C820A973211E95490060819F = {
+						CreatedOnToolsVersion = 9.4;
+					};
+					C820A97B211E95490060819F = {
+						CreatedOnToolsVersion = 9.4;
+					};
+					C820A990211E96A80060819F = {
+						CreatedOnToolsVersion = 9.4;
+					};
 					C8875659211E5417009F5530 = {
+						CreatedOnToolsVersion = 9.4;
+						LastSwiftMigration = 0940;
+					};
+					C8FC254B211F954100373805 = {
 						CreatedOnToolsVersion = 9.4;
 					};
 				};
@@ -111,11 +342,29 @@
 			projectRoot = "";
 			targets = (
 				C8875659211E5417009F5530 /* swiftplay */,
+				C820A973211E95490060819F /* swiftplay-mac */,
+				C820A97B211E95490060819F /* swiftplay-macTests */,
+				C820A990211E96A80060819F /* swiftplay-test */,
+				C8FC254B211F954100373805 /* CommonCryptoModuleMap */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		C820A972211E95490060819F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C820A97A211E95490060819F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C8875658211E5417009F5530 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -125,17 +374,223 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		C8AE915C211F955A003B128F /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# This if-statement means we'll only run the main script if the CommonCryptoModuleMap directory doesn't exist\n# Because otherwise the rest of the script causes a full recompile for anything where CommonCrypto is a dependency\n# Do a \"Clean Build Folder\" to remove this directory and trigger the rest of the script to run\nif [ -d \"${BUILT_PRODUCTS_DIR}/CommonCryptoModuleMap\" ]; then\necho \"${BUILT_PRODUCTS_DIR}/CommonCryptoModuleMap directory already exists, so skipping the rest of the script.\"\nexit 0\nfi\n\nmkdir -p \"${BUILT_PRODUCTS_DIR}/CommonCryptoModuleMap\"\ncat <<EOF > \"${BUILT_PRODUCTS_DIR}/CommonCryptoModuleMap/module.modulemap\"\nmodule CommonCrypto [system] {\n    header \"${SDKROOT}/usr/include/CommonCrypto/CommonCrypto.h\"\n    export *\n}\nEOF";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
+		C820A96F211E95490060819F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C81F11E4211F3E3200B6DF07 /* RSAHelper.swift in Sources */,
+				C820A99A211E96DD0060819F /* Controller.swift in Sources */,
+				C820A999211E96DD0060819F /* Track.swift in Sources */,
+				C820A99B211E96EB0060819F /* Airplay.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C820A978211E95490060819F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C820A982211E95490060819F /* swiftplay_macTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C820A98D211E96A80060819F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C820A994211E96A80060819F /* main.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C8875655211E5417009F5530 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C81F11E3211F3CF000B6DF07 /* RSAHelper.swift in Sources */,
+				C8875696211E5576009F5530 /* Track.swift in Sources */,
+				C887569B211E5821009F5530 /* Controller.swift in Sources */,
+				C80DD77F211E8B2100F85D10 /* Airplay.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		C820A97F211E95490060819F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C820A973211E95490060819F /* swiftplay-mac */;
+			targetProxy = C820A97E211E95490060819F /* PBXContainerItemProxy */;
+		};
+		C8AE915E211F9630003B128F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C8FC254B211F954100373805 /* CommonCryptoModuleMap */;
+			targetProxy = C8AE915D211F9630003B128F /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		C820A986211E95490060819F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
+				FRAMEWORK_VERSION = A;
+				INFOPLIST_FILE = "swiftplay-mac/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"${DT_TOOLCHAIN_DIR}/usr/lib/swift/macosx/\n",
+				);
+				LIBRARY_SEARCH_PATHS = "${DT_TOOLCHAIN_DIR}/usr/lib/swift/macosx/\n";
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.zoecarver.swiftplay-mac";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_INCLUDE_PATHS = "$(inherited) ${BUILT_PRODUCTS_DIR}/CommonCryptoModuleMap";
+				SWIFT_VERSION = 4.0;
+			};
+			name = Debug;
+		};
+		C820A987211E95490060819F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
+				FRAMEWORK_VERSION = A;
+				INFOPLIST_FILE = "swiftplay-mac/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"${DT_TOOLCHAIN_DIR}/usr/lib/swift/macosx/\n",
+				);
+				LIBRARY_SEARCH_PATHS = "${DT_TOOLCHAIN_DIR}/usr/lib/swift/macosx/\n";
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.zoecarver.swiftplay-mac";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_INCLUDE_PATHS = "$(inherited) ${BUILT_PRODUCTS_DIR}/CommonCryptoModuleMap";
+				SWIFT_VERSION = 4.0;
+			};
+			name = Release;
+		};
+		C820A989211E95490060819F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = "swiftplay-macTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.zoecarver.swiftplay-macTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 4.0;
+			};
+			name = Debug;
+		};
+		C820A98A211E95490060819F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = "swiftplay-macTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.zoecarver.swiftplay-macTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 4.0;
+			};
+			name = Release;
+		};
+		C820A996211E96A80060819F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 4.0;
+			};
+			name = Debug;
+		};
+		C820A997211E96A80060819F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 4.0;
+			};
+			name = Release;
+		};
 		C8875660211E5417009F5530 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -174,6 +629,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -189,6 +645,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
+				LD_RUNPATH_SEARCH_PATHS = "";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -237,6 +694,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -246,6 +704,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
+				LD_RUNPATH_SEARCH_PATHS = "";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
@@ -259,6 +718,7 @@
 		C8875663211E5417009F5530 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
@@ -266,6 +726,11 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = swiftplay/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -276,6 +741,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.zoecarver.swiftplay;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -284,6 +750,7 @@
 		C8875664211E5417009F5530 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
@@ -291,6 +758,11 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = swiftplay/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -306,9 +778,54 @@
 			};
 			name = Release;
 		};
+		C8FC254C211F954100373805 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos macosx";
+			};
+			name = Debug;
+		};
+		C8FC254D211F954100373805 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos macosx";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		C820A985211E95490060819F /* Build configuration list for PBXNativeTarget "swiftplay-mac" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C820A986211E95490060819F /* Debug */,
+				C820A987211E95490060819F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C820A988211E95490060819F /* Build configuration list for PBXNativeTarget "swiftplay-macTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C820A989211E95490060819F /* Debug */,
+				C820A98A211E95490060819F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C820A995211E96A80060819F /* Build configuration list for PBXNativeTarget "swiftplay-test" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C820A996211E96A80060819F /* Debug */,
+				C820A997211E96A80060819F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		C8875654211E5417009F5530 /* Build configuration list for PBXProject "swiftplay" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -323,6 +840,15 @@
 			buildConfigurations = (
 				C8875663211E5417009F5530 /* Debug */,
 				C8875664211E5417009F5530 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C8FC254E211F954100373805 /* Build configuration list for PBXAggregateTarget "CommonCryptoModuleMap" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C8FC254C211F954100373805 /* Debug */,
+				C8FC254D211F954100373805 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
