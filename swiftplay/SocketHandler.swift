@@ -217,12 +217,13 @@ public class SocketHandler {
         var offset = 0
         
         while offset < data.count {
-            guard let tagRange = Range(NSMakeRange(offset, 4)) else { // TODO: use good range
-                print("Error: invalid range for tag")
-                return
+            let data = data as NSData
+            
+            if verbose {
+                print("offset: \(offset)")
             }
             
-            let tagBytes = data.subdata(in: tagRange)
+            let tagBytes = data.subdata(with: NSMakeRange(offset, 4))
             let tag = String(data: tagBytes, encoding: .utf8) ?? String()
             
             offset += 4 // tag is 4 bytes
@@ -232,51 +233,135 @@ public class SocketHandler {
                 continue
             }
             
-            var size: UInt8 = 0
+            let size = UnsafeMutablePointer<UInt8>.allocate(capacity: 1024)
             
-            guard let sizeRange = Range(NSMakeRange(offset, 4)) else { // TODO: use good range
-                print("Error: invalid range for size")
-                return
-            }
+            let sizeBytes = data.subdata(with: NSMakeRange(offset, 4))
+            sizeBytes.copyBytes(to: size, count:4)
+            size.pointee = size.pointee.byteSwapped
             
-            let sizeBytes = data.subdata(in: sizeRange)
-            
-            size = sizeBytes.bytes(withCount: 4)
-            size = size.byteSwapped
             offset += 4
             
-            guard let valueRange = Range(NSMakeRange(offset, 4)) else { // TODO: use good range
-                print("Error: invalid range for value")
-                return
+            if offset >= data.length { return }
+            else if offset + Int(size.pointee) > data.length {
+                size.pointee = UInt8(data.length - offset)
             }
+            let value = data.subdata(with: NSMakeRange(offset, Int(size.pointee)))
+            let stringValue = String(data: value, encoding: .utf8)
+            let intValue = UnsafeMutablePointer<UInt8>.allocate(capacity: 1024)
             
-            let value = data.subdata(in: valueRange)
-            let valueS = String(data: value, encoding: .utf8)
-            var valueI: UInt8 = 0
-            
-            valueI = value.bytes(withCount: value.count)
+            value.copyBytes(to: intValue, count: value.count)
             
             // switch on DAAP format
             switch tag { // TODO: this should be an enum
             case "asal":
-                server.track.album = valueS ?? "Error reading album"
+                server.track.album = stringValue ?? "Error reading album"
             case "asar":
-                server.track.artist = valueS ?? "Error getting artist"
+                server.track.artist = stringValue ?? "Error getting artist"
             case "minm":
-                server.track.name = valueS ?? "Error Reading Name" // maybe handle this better?
+                server.track.name = stringValue ?? "Error Reading Name" // maybe handle this better?
             case "caps":
-                server.track.playing = valueI == 1
+                server.track.playing = intValue.pointee == 1
             default:
                 break
             }
             
-            offset += Int(size)
+            offset += Int(size.pointee)
         }
     }
     
     // MARK - Process Data
     
     open func process(packet data: Data) {
+        let data = data as NSData
+        
+        let type = UnsafeMutableRawPointer.allocate(byteCount: 1024, alignment: 0) // <UInt8>.allocate(capacity: 1024)
+        let timeStamp = UnsafeMutableRawPointer.allocate(byteCount: 1024, alignment: 0) // Should be 32
+        let sequenceNumber = UnsafeMutableRawPointer.allocate(byteCount: 1024, alignment: 0) // Should be 16
+        var payload = NSData()
+        
+        (data.subdata(with: NSMakeRange(1, 1)) as NSData).getBytes(type, length: 1)
+        print("type: \(type.mutable().pointee)")
+        
+        // New audio packet
+        if type.mutable().pointee == 96 || type.mutable().pointee == 224 {
+            (data.subdata(with: NSMakeRange(4, 4)) as NSData).getBytes(timeStamp, length: 4)
+            (data.subdata(with: NSMakeRange(2, 2)) as NSData).getBytes(sequenceNumber, length: 2)
+            payload = data.subdata(with: NSMakeRange(12, data.length - 12)) as NSData
+            print("Sequence Number: \(sequenceNumber.mutable().pointee)")
+            
+            timeStamp.mutable().pointee = timeStamp.pointee.byteSwapped
+            sequenceNumber.mutable().pointee = sequenceNumber.pointee.byteSwapped
+            
+            // Request any missing packets
+            if  server.lastSequenceNumber != -1
+                && Int(sequenceNumber.mutable().pointee &- 1) != server.lastSequenceNumber {
+                print("requesting new packets")
+                
+                // Retransmit request header
+                var header: [UInt8] = [128, 213, 0, 1]
+                let request = NSMutableData(bytes: &header, length: 4)
+                let numberOfPackets = sequenceNumber.mutable().pointee &- UInt8(server.lastSequenceNumber) &- 1
+                var sequenceNumberBytes = (UInt16(server.lastSequenceNumber) &+ 1).byteSwapped
+                var numberOfPacketsBytes = numberOfPackets.byteSwapped
+                
+                request.append(&sequenceNumberBytes, length: 2)
+                request.append(&numberOfPacketsBytes, length: 2)
+                
+                // Limit resend attempts
+                if server.address!.count > 0 && numberOfPackets < 128 {
+                    let controlPort = server.udpSockets[1]
+                    controlPort.send(request as Data, toAddress: server.address!, withTimeout: 5, tag: 0)
+                }
+                
+                #if DEBUG
+                print("Retransmit: \(sequenceNumberBytes.byteSwapped)",
+                    "Packets: \(numberOfPackets)",
+                    "Current: \(Int(sequenceNumber.mutable().pointee &- 1))",
+                    "Last: \(server.lastSequenceNumber)"
+                )
+                #endif
+            }
+            
+            server.lastSequenceNumber = sequenceNumber.mutable().pointee
+        }
+            // Retransmitted packet
+        else if type.mutable().pointee == 214 {
+            // Ignore malformed packets
+            if data.length < 16 {
+                return
+            }
+            
+            data.subdata(with: NSMakeRange(8, 4)).copyBytes(to: timeStamp, count: 4)
+            data.subdata(with: NSMakeRange(6, 2)).copyBytes(to: sequenceNumber, count: 2)
+            payload = data.subdata(with: NSMakeRange(16, data.length - 16)) as NSData
+            
+            timeStamp.mutable().pointee = timeStamp.mutable().pointee.byteSwapped
+            sequenceNumber.mutable().pointee = sequenceNumber.mutable().pointee.byteSwapped
+        }
+            // Ignore unknown packets
+        else {
+            return
+        }
+        
+        var packet = Packet()
+        packet.data = payload as Data
+        packet.timeStamp = UInt32(timeStamp.mutable().pointee)
+        packet.index = UInt16(sequenceNumber.mutable().pointee)
+        
+        // TODO: handle end
+        
+        guard let decryptedPacket = self.decrypt(packet: packet) else {
+            print("ERROR: decrypted nil packet")
+            return
+        }
+        
+        server.callback.async {
+            self.prepareAudioQueue(forPacket: decryptedPacket)
+        }
+    }
+    
+    // Dissabled
+    /*open func process(packet data: Data) {
         if verbose {
             let fullData = data.map {
                 return String(UInt8($0)) + ", " +
@@ -369,7 +454,7 @@ public class SocketHandler {
         server.callback.async {
             self.prepareAudioQueue(forPacket: decryptedPacket)
         }
-    }
+    }*/
     
     // MARK - private
     

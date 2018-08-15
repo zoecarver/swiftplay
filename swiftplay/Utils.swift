@@ -44,3 +44,9 @@ extension Data {
         return UnsafePointer<T>(bytes).pointee
     }
 }
+
+extension UnsafeMutableRawPointer {
+    func mutable <T> () -> UnsafeMutablePointer<T> {
+        return UnsafeMutablePointer<T>(OpaquePointer(self))
+    }
+}
