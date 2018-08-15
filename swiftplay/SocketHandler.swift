@@ -274,33 +274,33 @@ public class SocketHandler {
     open func process(packet data: Data) {
         let data = data as NSData
         
-        let type = UnsafeMutableRawPointer.allocate(byteCount: 1024, alignment: 0) // <UInt8>.allocate(capacity: 1024)
-        let timeStamp = UnsafeMutableRawPointer.allocate(byteCount: 1024, alignment: 0) // Should be 32
-        let sequenceNumber = UnsafeMutableRawPointer.allocate(byteCount: 1024, alignment: 0) // Should be 16
+        let type = UnsafeMutablePointer<UInt8>.allocate(capacity: 1024) // <UInt8>.allocate(capacity: 1024)
+        let timeStamp = UnsafeMutablePointer<UInt8>.allocate(capacity: 1024) // Should be 32
+        let sequenceNumber = UnsafeMutablePointer<UInt8>.allocate(capacity: 1024) // Should be 16
         var payload = NSData()
         
-        (data.subdata(with: NSMakeRange(1, 1)) as NSData).getBytes(type, length: 1)
-        print("type: \(type.mutable().pointee)")
+        data.subdata(with: NSMakeRange(1, 1)).copyBytes(to: type, count: 1)
+        print("type: \(type.pointee)")
         
         // New audio packet
-        if type.mutable().pointee == 96 || type.mutable().pointee == 224 {
-            (data.subdata(with: NSMakeRange(4, 4)) as NSData).getBytes(timeStamp, length: 4)
-            (data.subdata(with: NSMakeRange(2, 2)) as NSData).getBytes(sequenceNumber, length: 2)
+        if type.pointee == 96 || type.pointee == 224 {
+            data.subdata(with: NSMakeRange(4, 4)).copyBytes(to: timeStamp, count: 4)
+            data.subdata(with: NSMakeRange(2, 2)).copyBytes(to: sequenceNumber, count: 2)
             payload = data.subdata(with: NSMakeRange(12, data.length - 12)) as NSData
-            print("Sequence Number: \(sequenceNumber.mutable().pointee)")
+            print("Sequence Number: \(sequenceNumber.pointee)")
             
-            timeStamp.mutable().pointee = timeStamp.pointee.byteSwapped
-            sequenceNumber.mutable().pointee = sequenceNumber.pointee.byteSwapped
+            timeStamp.pointee = timeStamp.pointee.byteSwapped
+            sequenceNumber.pointee = sequenceNumber.pointee.byteSwapped
             
             // Request any missing packets
             if  server.lastSequenceNumber != -1
-                && Int(sequenceNumber.mutable().pointee &- 1) != server.lastSequenceNumber {
+                && Int(sequenceNumber.pointee &- 1) != server.lastSequenceNumber {
                 print("requesting new packets")
                 
                 // Retransmit request header
                 var header: [UInt8] = [128, 213, 0, 1]
                 let request = NSMutableData(bytes: &header, length: 4)
-                let numberOfPackets = sequenceNumber.mutable().pointee &- UInt8(server.lastSequenceNumber) &- 1
+                let numberOfPackets = sequenceNumber.pointee &- UInt8(server.lastSequenceNumber) &- 1
                 var sequenceNumberBytes = (UInt16(server.lastSequenceNumber) &+ 1).byteSwapped
                 var numberOfPacketsBytes = numberOfPackets.byteSwapped
                 
@@ -316,16 +316,16 @@ public class SocketHandler {
                 #if DEBUG
                 print("Retransmit: \(sequenceNumberBytes.byteSwapped)",
                     "Packets: \(numberOfPackets)",
-                    "Current: \(Int(sequenceNumber.mutable().pointee &- 1))",
+                    "Current: \(Int(sequenceNumber.pointee &- 1))",
                     "Last: \(server.lastSequenceNumber)"
                 )
                 #endif
             }
             
-            server.lastSequenceNumber = sequenceNumber.mutable().pointee
+            server.lastSequenceNumber = Int(sequenceNumber.pointee)
         }
             // Retransmitted packet
-        else if type.mutable().pointee == 214 {
+        else if type.pointee == 214 {
             // Ignore malformed packets
             if data.length < 16 {
                 return
@@ -335,8 +335,8 @@ public class SocketHandler {
             data.subdata(with: NSMakeRange(6, 2)).copyBytes(to: sequenceNumber, count: 2)
             payload = data.subdata(with: NSMakeRange(16, data.length - 16)) as NSData
             
-            timeStamp.mutable().pointee = timeStamp.mutable().pointee.byteSwapped
-            sequenceNumber.mutable().pointee = sequenceNumber.mutable().pointee.byteSwapped
+            timeStamp.pointee = timeStamp.pointee.byteSwapped
+            sequenceNumber.pointee = sequenceNumber.pointee.byteSwapped
         }
             // Ignore unknown packets
         else {
@@ -345,8 +345,8 @@ public class SocketHandler {
         
         var packet = Packet()
         packet.data = payload as Data
-        packet.timeStamp = UInt32(timeStamp.mutable().pointee)
-        packet.index = UInt16(sequenceNumber.mutable().pointee)
+        packet.timeStamp = UInt32(timeStamp.pointee)
+        packet.index = UInt16(sequenceNumber.pointee)
         
         // TODO: handle end
         
