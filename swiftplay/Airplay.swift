@@ -92,13 +92,14 @@ public class AirplayServer: NSObject, GCDAsyncSocketDelegate, GCDAsyncUdpSocketD
         audioStream.mFramesPerPacket = 352
         audioStream.mChannelsPerFrame = 2
         
-        AudioQueueNewOutputWithDispatchQueue(
+        let status = AudioQueueNewOutputWithDispatchQueue(
             &self.playerState.queue,
             &audioStream,
             0,
             self.callback) { aq, buffer in
                 self.output(self.playerState, aq: aq, buffer: buffer)
         }
+        assert(status == noErr)
         
         var cookie = serverConfig.cookie
         
@@ -109,7 +110,7 @@ public class AirplayServer: NSObject, GCDAsyncSocketDelegate, GCDAsyncUdpSocketD
         AudioQueueSetProperty(playerStateQueue, kAudioQueueProperty_MagicCookie, &cookie, 24)
         
         while playerState.buffers.count < serverConfig.bufferCount {
-            var buffer: AudioQueueBufferRef?
+            var buffer: AudioQueueBufferRef? = nil
             
             // "Buffer fits at least one packet of the max possible size"
             AudioQueueAllocateBufferWithPacketDescriptions(
@@ -138,12 +139,13 @@ public class AirplayServer: NSObject, GCDAsyncSocketDelegate, GCDAsyncUdpSocketD
             let count = packet.data.count
             
             // Make sure its in the right order
-            if packet.index != UInt16(playerState.packetsRead & 65535) { // TODO: what is the significance of `65535`
-                print("skiping: \(packet.index) with index: \(self.playerState.packetsRead & 65535)") // TODO: remove extra logs (like this one)
+            if  /*packet.index != UInt16(playerState.packetsRead & 65535)*/
+                index != self.playerState.packetsRead || packet.index == 0 { // TODO: what is the significance of `65535`
+                print("skiping: \(packet.index) with read: \(self.playerState.packetsRead), index: \(index)") // TODO: remove extra logs (like this one)
                 
                 self.playerState.packetsRead += 1
                 continue // skip back to the top of the loop
-            }
+            } else { print("ok") }
             
             // we ran out of buffer space
             if offset + count > serverConfig.bufferSize { break }
@@ -159,18 +161,24 @@ public class AirplayServer: NSObject, GCDAsyncSocketDelegate, GCDAsyncUdpSocketD
             }
             
             // Set the buffer / packet discriptions
-            if var description = buffer.pointee.mPacketDescriptions?[packetsCount] {
-                description.mStartOffset = Int64(offset)
-                description.mDataByteSize = UInt32(count)
-                description.mVariableFramesInPacket = 0
-            }
+            print("buffer: \(buffer.pointee.mAudioData), offset: \(offset)")
+//            let packetData = Utils.fromByteArray(buffer.pointee.mAudioData, UInt8.self)
+//            buffer.pointee.mAudioData
+//            packetData.withUnsafeMutableBytes {
+//                if let ptr = $0.baseAddress {
+//                    //  = ptr
+//                }
+//            }
+            _ = packet.data.copyBytes(to: UnsafeMutableBufferPointer(start: buffer, count: packet.data.count))
 
             packetsCount += 1
             offset += count
             self.playerState.packetsRead += 1
         }
-
-        buffer.pointee.mAudioDataByteSize = UInt32(offset)
+        
+        print("setting data size: \(offset)")
+        buffer.pointee.mAudioDataByteSize = UInt32(offset * 2024)
+        
         buffer.pointee.mPacketDescriptionCount = UInt32(packetsCount)
         
         // add specific playback tiem
@@ -179,6 +187,11 @@ public class AirplayServer: NSObject, GCDAsyncSocketDelegate, GCDAsyncUdpSocketD
         
         timeStamp.mSampleTime = Double(time)
         AudioQueueFlush(aq)
+        
+        let description = UnsafeRawPointer([
+            AudioStreamPacketDescription(mStartOffset: Int64(offset), mVariableFramesInPacket: 0, mDataByteSize: UInt32(offset))
+            ]).assumingMemoryBound(to: AudioStreamPacketDescription.self)
+        
         // caluculate the error
         error = AudioQueueEnqueueBufferWithParameters(aq, buffer, 0, nil, 0, 0, 0, nil, &timeStamp, nil)
         

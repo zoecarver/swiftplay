@@ -27,6 +27,14 @@ public class Utils {
         
         return range
     }
+    
+    public static func fromByteArray<T>(_ value: [UInt8], _: T.Type) -> T {
+        return value.withUnsafeBufferPointer {
+            $0.baseAddress!.withMemoryRebound(to: T.self, capacity: 1) {
+                $0.pointee
+            }
+        }
+    }
 }
 
 extension Data {

@@ -17,6 +17,7 @@ let verbose: Bool = false
 public class SocketHandler {
     
     /*weak*/ var server: AirplayServer!
+    var buffersWritten: Int = 0
     
     init(server: AirplayServer) {
         self.server = server
@@ -272,35 +273,54 @@ public class SocketHandler {
     // MARK - Process Data
     
     open func process(packet data: Data) {
-        let data = data as NSData
+        if verbose {
+            let intData = [UInt8](data)
+            
+            print("Sequence: \(UInt16(intData[2]))")
+            print("Sequence: \(UInt16(intData[3]))")
+            print("Together: \(UnsafePointer(Array(data[2...4])).withMemoryRebound(to: UInt16.self, capacity: 1) { $0.pointee })")
+            
+            var i = 0
+            for int in intData where i < 12 {
+                print("Item: \(int)")
+                i += 1
+            }
+            
+            print(" --- ")
+        }
         
-        let type = UnsafeMutablePointer<UInt8>.allocate(capacity: 1024) // <UInt8>.allocate(capacity: 1024)
-        let timeStamp = UnsafeMutablePointer<UInt8>.allocate(capacity: 1024) // Should be 32
-        let sequenceNumber = UnsafeMutablePointer<UInt8>.allocate(capacity: 1024) // Should be 16
-        var payload = NSData()
+        var data = [UInt8](data)
         
-        data.subdata(with: NSMakeRange(1, 1)).copyBytes(to: type, count: 1)
-        print("type: \(type.pointee)")
+        var type = UInt8(0) // <UInt8>.allocate(capacity: 1024)
+        var timeStamp = UInt32(0) // Should be 32
+        var sequenceNumber = UInt16(0) // Should be 16
+        var payload = Data()
+        
+        type = data[1]
+        if verbose {
+            print("type: \(type)")
+        }
         
         // New audio packet
-        if type.pointee == 96 || type.pointee == 224 {
-            data.subdata(with: NSMakeRange(4, 4)).copyBytes(to: timeStamp, count: 4)
-            data.subdata(with: NSMakeRange(2, 2)).copyBytes(to: sequenceNumber, count: 2)
-            payload = data.subdata(with: NSMakeRange(12, data.length - 12)) as NSData
-            print("Sequence Number: \(sequenceNumber.pointee)")
+        if type == 96 || type == 224 {
+            timeStamp = UnsafePointer(Array(data[4...8]))
+                .withMemoryRebound(to: UInt32.self, capacity: 1) { $0.pointee }
+            sequenceNumber = UnsafePointer(Array(data[2...4]))
+                .withMemoryRebound(to: UInt16.self, capacity: 1) { $0.pointee }
+            payload = Data(bytes: Array(data[16...data.count - 1]))
             
-            timeStamp.pointee = timeStamp.pointee.byteSwapped
-            sequenceNumber.pointee = sequenceNumber.pointee.byteSwapped
+            timeStamp = timeStamp.byteSwapped
+            sequenceNumber = sequenceNumber.byteSwapped
             
             // Request any missing packets
-            if  server.lastSequenceNumber != -1
-                && Int(sequenceNumber.pointee &- 1) != server.lastSequenceNumber {
-                print("requesting new packets")
+            if  /*server.lastSequenceNumber != -1
+                 && Int(sequenceNumber &- 1) != server.lastSequenceNumber*/ false { // TODO: re enable
+                print("requesting new packets, seq: \(Int(sequenceNumber &- 1)), last: \(server.lastSequenceNumber)")
                 
                 // Retransmit request header
                 var header: [UInt8] = [128, 213, 0, 1]
                 let request = NSMutableData(bytes: &header, length: 4)
-                let numberOfPackets = sequenceNumber.pointee &- UInt8(server.lastSequenceNumber) &- 1
+                let numberOfPackets = sequenceNumber &- UInt16(server.lastSequenceNumber) &- 1
                 var sequenceNumberBytes = (UInt16(server.lastSequenceNumber) &+ 1).byteSwapped
                 var numberOfPacketsBytes = numberOfPackets.byteSwapped
                 
@@ -313,41 +333,47 @@ public class SocketHandler {
                     controlPort.send(request as Data, toAddress: server.address!, withTimeout: 5, tag: 0)
                 }
                 
-                #if DEBUG
                 print("Retransmit: \(sequenceNumberBytes.byteSwapped)",
                     "Packets: \(numberOfPackets)",
-                    "Current: \(Int(sequenceNumber.pointee &- 1))",
+                    "Current: \(Int(sequenceNumber &- 1))",
                     "Last: \(server.lastSequenceNumber)"
                 )
-                #endif
             }
             
-            server.lastSequenceNumber = Int(sequenceNumber.pointee)
+            server.lastSequenceNumber = Int(sequenceNumber)
         }
             // Retransmitted packet
-        else if type.pointee == 214 {
+        else if type == 214 {
+            print("using retransmitted packet")
             // Ignore malformed packets
-            if data.length < 16 {
+            if data.count < 16 {
                 return
             }
             
-            data.subdata(with: NSMakeRange(8, 4)).copyBytes(to: timeStamp, count: 4)
-            data.subdata(with: NSMakeRange(6, 2)).copyBytes(to: sequenceNumber, count: 2)
-            payload = data.subdata(with: NSMakeRange(16, data.length - 16)) as NSData
+            timeStamp = UnsafePointer(Array(data[8...12]))
+                .withMemoryRebound(to: UInt32.self, capacity: 1) { $0.pointee } // TODO: this might need to be 1
+//            data.subdata(with: NSMakeRange(8, 4)).copyBytes(to: timeStamp, count: 4)
+            sequenceNumber = UnsafePointer(Array(data[6...8]))
+                .withMemoryRebound(to: UInt16.self, capacity: 1) { $0.pointee }
+//            data.subdata(with: NSMakeRange(6, 2)).copyBytes(to: sequenceNumber, count: 2)
+            payload = Data(bytes: Array(data[16...data.count - 16]))
+//            payload = data.subdata(with: NSMakeRange(16, data.length - 16)) as NSData
             
-            timeStamp.pointee = timeStamp.pointee.byteSwapped
-            sequenceNumber.pointee = sequenceNumber.pointee.byteSwapped
-        }
-            // Ignore unknown packets
-        else {
+            timeStamp = timeStamp.byteSwapped
+            sequenceNumber = sequenceNumber.byteSwapped
+        } else { // Ignore unknown packets
             return
         }
         
         var packet = Packet()
-        packet.data = payload as Data
-        packet.timeStamp = UInt32(timeStamp.pointee)
-        packet.index = UInt16(sequenceNumber.pointee)
+        packet.data = payload
+        packet.timeStamp = timeStamp
+        packet.index = sequenceNumber
         
+        if verbose {
+            print("Sequence Number: \(sequenceNumber), packet index: \(packet.index)")
+        }
+
         // TODO: handle end
         
         guard let decryptedPacket = self.decrypt(packet: packet) else {
@@ -356,7 +382,40 @@ public class SocketHandler {
         }
         
         server.callback.async {
-            self.prepareAudioQueue(forPacket: decryptedPacket)
+            print("buffers: \(self.server.playerState.buffers.count)")
+            let buffer = self.server.playerState.buffers[0]
+            let rawData = [UInt8](decryptedPacket.data)
+            buffer.pointee.mAudioData.storeBytes(of: rawData, as: [UInt8].self)
+            buffer.pointee.mAudioDataByteSize = UInt32(rawData.count)
+            buffer.pointee.mPacketDescriptionCount = 1
+            
+            var status = AudioQueueEnqueueBuffer(
+                self.server.playerState.queue!,
+                buffer,
+                1,
+                [AudioStreamPacketDescription(
+                    mStartOffset: 0, mVariableFramesInPacket: 0, mDataByteSize: UInt32(rawData.count))])
+            if status != noErr {
+                fatalError("ERROR: Audio queue error with status: \(status)")
+            } else {
+                self.buffersWritten += 1
+            }
+            
+            if self.buffersWritten >= 128 {
+                var outVal = UInt32(128)
+                status = AudioQueuePrime(self.server.playerState.queue!, 128, &outVal)
+                
+                if status != noErr {
+                    fatalError("ERROR: Audio queue prime error with status: \(status)")
+                }
+                
+                status = AudioQueueStart(self.server.playerState.queue!, nil)
+                
+                if status != noErr {
+                    fatalError("ERROR: Audio queue start error with status: \(status)")
+                }
+            }
+//            self.prepareAudioQueue(forPacket: decryptedPacket)
         }
     }
     
@@ -616,6 +675,15 @@ public class SocketHandler {
         let index = Int(packet.index) & maxIndex
         let remainingBuffer = server.playerState.packetsWritten - server.playerState.packetsRead
         
+        if verbose {
+            print("setting packet at index: \(index)")
+            
+            let numOfFullPackets = server.playerState.packets.filter { pack in
+                return pack.data.count != 0
+                }.count
+            print("full packets: \(numOfFullPackets)")
+        }
+        
         server.playerState.packets[index] = packet
         
         // one frame before the initial time
@@ -654,7 +722,9 @@ public class SocketHandler {
             }
             
             if server.track.playing {
-                AudioQueueStart(aq, nil)
+                print("started playing")
+                let status = AudioQueueStart(aq, nil)
+                assert(status == noErr)
             }
         }
     }
