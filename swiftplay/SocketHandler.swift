@@ -11,6 +11,7 @@ import AudioToolbox
 import CocoaAsyncSocket
 import Security
 import CommonCrypto
+import AVFoundation
 
 let verbose: Bool = false
 
@@ -18,6 +19,10 @@ public class SocketHandler {
     
     /*weak*/ var server: AirplayServer!
     var buffersWritten: Int = 0
+    var engine: AVAudioEngine? = nil
+    var player: AVAudioPlayerNode? = nil
+    var fullBuffer = Data()
+    var buffers: [Data] = []
     
     init(server: AirplayServer) {
         self.server = server
@@ -83,16 +88,19 @@ public class SocketHandler {
         }
         
         func isFlush () {
-            guard let playerStateQueue = server.playerState.queue else {
-                print("Error no player state queue")
-                return
-            }
+            self.server.audioSession.reset()
             
             server.process.async {
                 self.server.lastSequenceNumber = -1
             }
             
-            AudioQueueReset(playerStateQueue) // TODO hoping that this is passed by refrence but it might not be
+            return
+            
+            server.process.async {
+                self.server.lastSequenceNumber = -1
+            }
+            
+//            AudioQueueReset(playerStateQueue) // TODO hoping that this is passed by refrence but it might not be
             
             server.callback.async {
                 self.server.playerState.queueTime = 0
@@ -307,7 +315,7 @@ public class SocketHandler {
                 .withMemoryRebound(to: UInt32.self, capacity: 1) { $0.pointee }
             sequenceNumber = UnsafePointer(Array(data[2...4]))
                 .withMemoryRebound(to: UInt16.self, capacity: 1) { $0.pointee }
-            payload = Data(bytes: Array(data[16...data.count - 1]))
+            payload = Data(bytes: Array(data[12...data.count - 1]))
             
             timeStamp = timeStamp.byteSwapped
             sequenceNumber = sequenceNumber.byteSwapped
@@ -376,47 +384,143 @@ public class SocketHandler {
 
         // TODO: handle end
         
+        if server.lastSequenceNumber == -1 {
+            self.server.audioSession.setSequenceNumber(packet.index)
+            server.lastSequenceNumber = Int(packet.index)
+        }
+        
+        let packetInterval = packet.index &- UInt16(server.lastSequenceNumber)
+        let isPacketNewer = packetInterval < (1 << 15)
+        
+        if isPacketNewer { server.lastSequenceNumber = Int(packet.index) }
+        
         guard let decryptedPacket = self.decrypt(packet: packet) else {
             print("ERROR: decrypted nil packet")
             return
         }
         
-        server.callback.async {
-            print("buffers: \(self.server.playerState.buffers.count)")
-            let buffer = self.server.playerState.buffers[0]
-            let rawData = [UInt8](decryptedPacket.data)
-            buffer.pointee.mAudioData.storeBytes(of: rawData, as: [UInt8].self)
-            buffer.pointee.mAudioDataByteSize = UInt32(rawData.count)
-            buffer.pointee.mPacketDescriptionCount = 1
-            
-            var status = AudioQueueEnqueueBuffer(
-                self.server.playerState.queue!,
-                buffer,
-                1,
-                [AudioStreamPacketDescription(
-                    mStartOffset: 0, mVariableFramesInPacket: 0, mDataByteSize: UInt32(rawData.count))])
-            if status != noErr {
-                fatalError("ERROR: Audio queue error with status: \(status)")
-            } else {
-                self.buffersWritten += 1
-            }
-            
-            if self.buffersWritten >= 128 {
-                var outVal = UInt32(128)
-                status = AudioQueuePrime(self.server.playerState.queue!, 128, &outVal)
-                
-                if status != noErr {
-                    fatalError("ERROR: Audio queue prime error with status: \(status)")
-                }
-                
-                status = AudioQueueStart(self.server.playerState.queue!, nil)
-                
-                if status != noErr {
-                    fatalError("ERROR: Audio queue start error with status: \(status)")
-                }
-            }
-//            self.prepareAudioQueue(forPacket: decryptedPacket)
-        }
+        self.server.audioSession.add(decryptedPacket)
+        
+//        server.callback.async {
+//            self.buffersWritten += 1
+//
+//            self.fullBuffer.append(decryptedPacket.data)
+//            self.buffers.append(decryptedPacket.data)
+//
+//            if self.buffersWritten == 512 {
+//                let filePath = "/Users/zoe/Developer/swiftplay/swiftplay/sample.m4a"
+//                let fileURL = URL(fileURLWithPath: filePath)
+//                let audioFile = try! AVAudioFile(forReading: fileURL)
+//
+//                self.engine = AVAudioEngine()
+//                self.player = AVAudioPlayerNode()
+//
+//                guard   let engine = self.engine,
+//                    let player = self.player else { return }
+//
+//                var format = AudioStreamBasicDescription()
+//                format.mSampleRate = 44100
+//                format.mFormatID = kAudioFormatAppleLossless
+//                format.mFramesPerPacket = 352
+//                format.mChannelsPerFrame = 2
+//                let aacFormat = AVAudioFormat(streamDescription: &format)!
+//
+//                var descriptions:[AudioStreamPacketDescription] = []
+//                var offset = 0
+//                for packet in self.buffers {
+//                    var desc = AudioStreamPacketDescription()
+//                    desc.mDataByteSize = UInt32(packet.count)
+//                    desc.mStartOffset = Int64(offset)
+//                    desc.mVariableFramesInPacket = 0
+//
+//                    descriptions.append(desc)
+//                    offset += packet.count
+//                }
+//
+//                let inputFormat = AVAudioFormat(
+//                    commonFormat: .pcmFormatInt16,
+//                    sampleRate: 44100, channels: 2,
+//                    interleaved: false)!
+//
+////                let aacBuffer = AudioBufferConverter.convertToAAC(from: self.fullBuffer, error: nil)!
+////                let data = Data(bytes: aacBuffer.data, count: Int(aacBuffer.byteLength))
+////                let packetDescriptions = Array(UnsafeBufferPointer(start: aacBuffer.packetDescriptions, count: Int(aacBuffer.packetCount)))
+//                let aacBuffer = AudioBufferConverter.convertToAAC(from: self.fullBuffer, packetDescriptions: descriptions)!
+//                let audioWriter = try! AVAssetWriter(outputURL: fileURL, fileType: .m4a)
+//                let audioWriterInput = AVAssetWriterInput(mediaType: .audio, outputSettings: nil)
+//
+//                let converter = AKConverter
+//                    // AudioBufferConverter.convertToAAC(from: self.fullBuffer.toAVBuffer(withFormat: aacFormat), error: nil)!
+//                print("count: \(self.fullBuffer.count)")
+//
+////                let converter = AVAudioConverter(from: aacBuffer.format, to: inputFormat)!
+//                let pcmBuffer = AVAudioPCMBuffer(pcmFormat: inputFormat, frameCapacity: AVAudioFrameCount(descriptions.count))!
+//
+////                AudioBufferConverter.convert(withConverter: converter, from: aacBuffer, to: pcmBuffer, error: nil)
+//
+//                /*let audioData = self.fullBuffer.toPCMBuffer(withFormat: inputFormat) AudioBufferConverter.convertToPCM(
+//                    from: AudioBufferConverter.convertToAAC(
+//                        from: self.fullBuffer,
+//                        packetDescriptions: [
+//                            AudioStreamPacketDescription(
+//                                mStartOffset: 0,
+//                                mVariableFramesInPacket: 0,
+//                                mDataByteSize: UInt32(self.fullBuffer.count))
+//                        ])!,
+//                    error: nil)!*/
+//                print("audio data: \(Array(UnsafeBufferPointer(start: pcmBuffer.int16ChannelData!.pointee, count: decryptedPacket.data.count)))")
+//
+////                try! audioFile.read(into: audioData)
+//
+//                let mainMixer = engine.mainMixerNode
+//
+//                engine.attach(player)
+//                engine.connect(player, to: mainMixer, format: AudioBufferFormatHelper.PCMFormat())
+//                try! engine.start()
+//                print("running: \(engine.isRunning)")
+//
+//                player.scheduleBuffer(pcmBuffer) {
+//                    print("audio buffer scheduled")
+//                }
+//
+//                player.play()
+//            }
+//
+////            print("buffers: \(self.server.playerState.buffers.count)")
+////            let buffer = self.server.playerState.buffers[0]
+////            let rawData = [UInt8](decryptedPacket.data)
+////            buffer.pointee.mAudioData.storeBytes(of: rawData, as: [UInt8].self)
+////            buffer.pointee.mAudioDataByteSize = UInt32(rawData.count)
+////            buffer.pointee.mPacketDescriptionCount = 1
+////
+////            var status = AudioQueueEnqueueBuffer(
+////                self.server.playerState.queue!,
+////                buffer,
+////                1,
+////                [AudioStreamPacketDescription(
+////                    mStartOffset: 0, mVariableFramesInPacket: 0, mDataByteSize: UInt32(rawData.count))])
+////            if status != noErr {
+////                fatalError("ERROR: Audio queue error with status: \(status)")
+////            } else {
+////                self.buffersWritten += 1
+////            }
+////
+////            if self.buffersWritten >= 128 {
+////                var outVal = UInt32(128)
+////                status = AudioQueuePrime(self.server.playerState.queue!, 128, &outVal)
+////
+////                if status != noErr {
+////                    fatalError("ERROR: Audio queue prime error with status: \(status)")
+////                }
+////
+////                status = AudioQueueStart(self.server.playerState.queue!, nil)
+////
+////                if status != noErr {
+////                    fatalError("ERROR: Audio queue start error with status: \(status)")
+////                }
+////            }
+////            self.prepareAudioQueue(forPacket: decryptedPacket)
+//        }
     }
     
     // Dissabled
@@ -529,8 +633,8 @@ public class SocketHandler {
         
         if sequenceNumber != -1 {
             server.callback.async {
-                self.server.playerState.packetsRead = Int64(sequenceNumber)
-                self.server.playerState.packetsWritten = Int64(sequenceNumber)
+                self.server.playerState.readIndex = UInt16(sequenceNumber)
+                self.server.playerState.writeIndex = UInt16(sequenceNumber)
                 self.server.playerState.sessionTime = 0
                 
             }
@@ -673,7 +777,7 @@ public class SocketHandler {
     private func prepareAudioQueue(forPacket packet: Packet) {
         let maxIndex = server.playerState.packets.count - 1
         let index = Int(packet.index) & maxIndex
-        let remainingBuffer = server.playerState.packetsWritten - server.playerState.packetsRead
+        let remainingBuffer = server.playerState.writeIndex - server.playerState.readIndex
         
         if verbose {
             print("setting packet at index: \(index)")
@@ -699,14 +803,14 @@ public class SocketHandler {
         
         // get number of new packets
         if packet.timeStamp > server.playerState.sessionTime || wrapsAround {
-            let packetsToAdd = Int64((packet.timeStamp &- server.playerState.sessionTime) / 352)
-            server.playerState.packetsWritten += packetsToAdd
+            let packetsToAdd = UInt16((packet.timeStamp &- server.playerState.sessionTime) / 352)
+            server.playerState.writeIndex += packetsToAdd
             server.playerState.sessionTime = packet.timeStamp
         }
         
         // buffer at least 128 packets before playback
         if remainingBuffer >= 128 {
-            server.playerState.packetsRead = server.playerState.packetsWritten - 128
+            server.playerState.readIndex = server.playerState.writeIndex - 128
             server.playerState.queueTime = 0
             
             guard let aq = server.playerState.queue else {
@@ -717,7 +821,7 @@ public class SocketHandler {
             for _ in 0 ..< server.playerState.buffers.count {
                 let buffer = server.playerState.buffers[0]
                 
-                server.output(server.playerState, aq: aq, buffer: buffer)
+//                server.output(server.playerState, aq: aq, buffer: buffer)
                 server.playerState.buffers.removeFirst()
             }
             

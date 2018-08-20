@@ -52,6 +52,12 @@ public class AirplayServer: NSObject, GCDAsyncSocketDelegate, GCDAsyncUdpSocketD
     
     private var socketHandler:SocketHandler?
     
+    public private (set) var audioSession: AudioSession
+    
+    public override init() {
+        self.audioSession = AudioSession(withState: self.playerState)
+    }
+    
     public func listen(/*on port: UInt16? = nil*/) {
         self.socketHandler = SocketHandler(server: self)
         
@@ -86,130 +92,24 @@ public class AirplayServer: NSObject, GCDAsyncSocketDelegate, GCDAsyncUdpSocketD
         service.publish()
         print("published")
         
-        var audioStream = AudioStreamBasicDescription()
-        audioStream.mSampleRate = 44100
-        audioStream.mFormatID = kAudioFormatAppleLossless
-        audioStream.mFramesPerPacket = 352
-        audioStream.mChannelsPerFrame = 2
+        self.audioSession.start()
         
-        let status = AudioQueueNewOutputWithDispatchQueue(
-            &self.playerState.queue,
-            &audioStream,
-            0,
-            self.callback) { aq, buffer in
-                self.output(self.playerState, aq: aq, buffer: buffer)
-        }
-        assert(status == noErr)
-        
-        var cookie = serverConfig.cookie
-        
-        guard let playerStateQueue = self.playerState.queue else {
-            print("ERROR playerState queue nil!")
-            return
-        }
-        AudioQueueSetProperty(playerStateQueue, kAudioQueueProperty_MagicCookie, &cookie, 24)
-        
-        while playerState.buffers.count < serverConfig.bufferCount {
-            var buffer: AudioQueueBufferRef? = nil
-            
-            // "Buffer fits at least one packet of the max possible size"
-            AudioQueueAllocateBufferWithPacketDescriptions(
-                playerStateQueue,
-                serverConfig.bufferSize,
-                48,
-                &buffer)
-            
-            guard let bangBuffer = buffer else {
-                print("ERROR buffer is nil")
-                return
-            }
-            self.playerState.buffers.append(bangBuffer)
-        }
-    }
-    
-    public func output (_ playerState: PlayerState, aq: AudioQueueRef, buffer: AudioQueueBufferRef) {
-        let max = Int64(self.playerState.packets.count - 1)
-        var packetsCount = 0
-        var offset = 0
-        var time = UInt32(0)
-        
-        while self.playerState.packetsRead < playerState.packetsWritten {
-            let index = Int(self.playerState.packetsRead & max) // combining matching binary elements
-            let packet = self.playerState.packets[index]
-            let count = packet.data.count
-            
-            // Make sure its in the right order
-            if  /*packet.index != UInt16(playerState.packetsRead & 65535)*/
-                index != self.playerState.packetsRead || packet.index == 0 { // TODO: what is the significance of `65535`
-                print("skiping: \(packet.index) with read: \(self.playerState.packetsRead), index: \(index)") // TODO: remove extra logs (like this one)
-                
-                self.playerState.packetsRead += 1
-                continue // skip back to the top of the loop
-            } else { print("ok") }
-            
-            // we ran out of buffer space
-            if offset + count > serverConfig.bufferSize { break }
-            
-            // Make sure the player time is the same as the time being sent
-            if self.playerState.queueTime == 0 {
-                self.playerState.queueTime = packet.timeStamp
-            }
-            
-            // "Find playback time for first buffered packet"
-            if packet.timeStamp >= self.playerState.queueTime && time == 0 {
-                time = UInt32(packet.timeStamp - self.playerState.queueTime)
-            }
-            
-            // Set the buffer / packet discriptions
-            print("buffer: \(buffer.pointee.mAudioData), offset: \(offset)")
-//            let packetData = Utils.fromByteArray(buffer.pointee.mAudioData, UInt8.self)
-//            buffer.pointee.mAudioData
-//            packetData.withUnsafeMutableBytes {
-//                if let ptr = $0.baseAddress {
-//                    //  = ptr
-//                }
+//        while playerState.buffers.count < serverConfig.bufferCount {
+//            var buffer: AudioQueueBufferRef? = nil
+//
+//            // "Buffer fits at least one packet of the max possible size"
+//            AudioQueueAllocateBufferWithPacketDescriptions(
+//                playerStateQueue,
+//                serverConfig.bufferSize,
+//                48,
+//                &buffer)
+//
+//            guard let bangBuffer = buffer else {
+//                print("ERROR buffer is nil")
+//                return
 //            }
-            _ = packet.data.copyBytes(to: UnsafeMutableBufferPointer(start: buffer, count: packet.data.count))
-
-            packetsCount += 1
-            offset += count
-            self.playerState.packetsRead += 1
-        }
-        
-        print("setting data size: \(offset)")
-        buffer.pointee.mAudioDataByteSize = UInt32(offset * 2024)
-        
-        buffer.pointee.mPacketDescriptionCount = UInt32(packetsCount)
-        
-        // add specific playback tiem
-        var error = Int32(0)
-        var timeStamp = AudioTimeStamp()
-        
-        timeStamp.mSampleTime = Double(time)
-        AudioQueueFlush(aq)
-        
-        let description = UnsafeRawPointer([
-            AudioStreamPacketDescription(mStartOffset: Int64(offset), mVariableFramesInPacket: 0, mDataByteSize: UInt32(offset))
-            ]).assumingMemoryBound(to: AudioStreamPacketDescription.self)
-        
-        // caluculate the error
-        error = AudioQueueEnqueueBufferWithParameters(aq, buffer, 0, nil, 0, 0, 0, nil, &timeStamp, nil)
-        
-        // update if necissary because of error
-        if error != 0 {
-            // retry with this buffer
-            self.playerState.buffers.append(buffer)
-            self.playerState.queueTime = 0
-            
-            print("ERROR: Audio Queue Enqueue Error: \(error)")
-            // TODO: add debug info
-            
-            self.process.async {
-                self.lastSequenceNumber = -1
-            }
-                        
-            AudioQueuePause(aq)
-        }
+//            self.playerState.buffers.append(bangBuffer)
+//        }
     }
     
     // MARK - Socket Deligate

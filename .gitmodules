@@ -1,0 +1,3 @@
+[submodule "AudioKit"]
+	path = AudioKit
+	url = git@github.com:pudility/AudioKit.git

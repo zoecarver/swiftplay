@@ -35,9 +35,12 @@
 		C820A9A4211E98CD0060819F /* CocoaAsyncSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C820A9A3211E98CD0060819F /* CocoaAsyncSocket.framework */; };
 		C820A9A5211F2C1E0060819F /* swiftplay_mac.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C820A974211E95490060819F /* swiftplay_mac.framework */; };
 		C820A9A9211F2D840060819F /* CocoaAsyncSocket.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C820A9A3211E98CD0060819F /* CocoaAsyncSocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C828C685212792E6002D6F73 /* sample.m4a in Resources */ = {isa = PBXBuildFile; fileRef = C828C683212792C4002D6F73 /* sample.m4a */; };
 		C887565F211E5417009F5530 /* swiftplay.h in Headers */ = {isa = PBXBuildFile; fileRef = C887565D211E5417009F5530 /* swiftplay.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C8875696211E5576009F5530 /* Track.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8875695211E5576009F5530 /* Track.swift */; };
 		C887569B211E5821009F5530 /* Controller.swift in Sources */ = {isa = PBXBuildFile; fileRef = C887569A211E5821009F5530 /* Controller.swift */; };
+		C8E2F8F32129E5000005B5BE /* AudioSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8E2F8F12129E5000005B5BE /* AudioSession.swift */; };
+		C8E2F8F42129E65D0005B5BE /* AudioSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8E2F8F12129E5000005B5BE /* AudioSession.swift */; };
 		C8EF28882123999F00CCEF4C /* PlayerState.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8EF28872123999F00CCEF4C /* PlayerState.swift */; };
 		C8EF288A212399B800CCEF4C /* Packet.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8EF2889212399B800CCEF4C /* Packet.swift */; };
 		C8EF288C212399C600CCEF4C /* Server.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8EF288B212399C600CCEF4C /* Server.swift */; };
@@ -101,12 +104,14 @@
 		C820A993211E96A80060819F /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		C820A9A1211E98C00060819F /* CocoaAsyncSocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaAsyncSocket.framework; path = Carthage/Build/iOS/CocoaAsyncSocket.framework; sourceTree = "<group>"; };
 		C820A9A3211E98CD0060819F /* CocoaAsyncSocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaAsyncSocket.framework; path = Carthage/Build/Mac/CocoaAsyncSocket.framework; sourceTree = "<group>"; };
+		C828C683212792C4002D6F73 /* sample.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = sample.m4a; sourceTree = "<group>"; };
 		C887565A211E5417009F5530 /* swiftplay.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = swiftplay.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C887565D211E5417009F5530 /* swiftplay.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = swiftplay.h; sourceTree = "<group>"; };
 		C887565E211E5417009F5530 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C8875665211E5428009F5530 /* Airplay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Airplay.swift; sourceTree = "<group>"; };
 		C8875695211E5576009F5530 /* Track.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Track.swift; sourceTree = "<group>"; };
 		C887569A211E5821009F5530 /* Controller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Controller.swift; sourceTree = "<group>"; };
+		C8E2F8F12129E5000005B5BE /* AudioSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioSession.swift; sourceTree = "<group>"; };
 		C8EF28872123999F00CCEF4C /* PlayerState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerState.swift; sourceTree = "<group>"; };
 		C8EF2889212399B800CCEF4C /* Packet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Packet.swift; sourceTree = "<group>"; };
 		C8EF288B212399C600CCEF4C /* Server.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Server.swift; sourceTree = "<group>"; };
@@ -202,6 +207,7 @@
 		C887565C211E5417009F5530 /* swiftplay */ = {
 			isa = PBXGroup;
 			children = (
+				C828C683212792C4002D6F73 /* sample.m4a */,
 				C887565D211E5417009F5530 /* swiftplay.h */,
 				C887565E211E5417009F5530 /* Info.plist */,
 				C8875665211E5428009F5530 /* Airplay.swift */,
@@ -213,6 +219,7 @@
 				C8EF2889212399B800CCEF4C /* Packet.swift */,
 				C8EF288B212399C600CCEF4C /* Server.swift */,
 				C8EF288F21239A0A00CCEF4C /* Utils.swift */,
+				C8E2F8F12129E5000005B5BE /* AudioSession.swift */,
 			);
 			path = swiftplay;
 			sourceTree = "<group>";
@@ -375,6 +382,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C828C685212792E6002D6F73 /* sample.m4a in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -416,6 +424,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C8EF289121239AF300CCEF4C /* PlayerState.swift in Sources */,
+				C8E2F8F32129E5000005B5BE /* AudioSession.swift in Sources */,
 				C8EF289221239AF300CCEF4C /* Packet.swift in Sources */,
 				C8EF289321239AF300CCEF4C /* Server.swift in Sources */,
 				C8EF289421239AF300CCEF4C /* SocketHandler.swift in Sources */,
@@ -448,6 +457,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C8EF288C212399C600CCEF4C /* Server.swift in Sources */,
+				C8E2F8F42129E65D0005B5BE /* AudioSession.swift in Sources */,
 				C8EF28882123999F00CCEF4C /* PlayerState.swift in Sources */,
 				C8EF289021239A0A00CCEF4C /* Utils.swift in Sources */,
 				C81F11E3211F3CF000B6DF07 /* RSAHelper.swift in Sources */,
@@ -488,8 +498,10 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/Mac",
+					"\"$(SRCROOT)/\"",
 				);
 				FRAMEWORK_VERSION = A;
+				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "swiftplay-mac/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -508,6 +520,7 @@
 				SKIP_INSTALL = YES;
 				SWIFT_INCLUDE_PATHS = "$(inherited) ${BUILT_PRODUCTS_DIR}/CommonCryptoModuleMap";
 				SWIFT_VERSION = 4.0;
+				USER_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/\"";
 			};
 			name = Debug;
 		};
@@ -524,8 +537,10 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/Mac",
+					"\"$(SRCROOT)/\"",
 				);
 				FRAMEWORK_VERSION = A;
+				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "swiftplay-mac/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -544,6 +559,7 @@
 				SKIP_INSTALL = YES;
 				SWIFT_INCLUDE_PATHS = "$(inherited) ${BUILT_PRODUCTS_DIR}/CommonCryptoModuleMap";
 				SWIFT_VERSION = 4.0;
+				USER_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/\"";
 			};
 			name = Release;
 		};
@@ -594,6 +610,10 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -610,6 +630,10 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -760,6 +784,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/Mac",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
+					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = swiftplay/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -792,6 +817,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/Mac",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
+					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = swiftplay/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
